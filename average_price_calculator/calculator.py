@@ -1,131 +1,108 @@
-"""Command-line interface for the calculator."""
+"""Main calculator logic."""
 
-import typer
-from typing import Optional
-from rich.console import Console
-from rich.table import Table
-from rich import print as rprint
+from decimal import ROUND_HALF_UP, Decimal
 
-from .calculator import PriceData, calculate_average_price_safe
-
-app = typer.Typer(
-    name="avg-price-calc",
-    help="Calculate weighted average prices for investments",
-    add_completion=False,
-)
-console = Console()
+from .models import CalculationResult, PriceData
 
 
-@app.command()
-def calculate(
-    initial_qty: float = typer.Option(
-        ..., "--initial-qty", "-iq",
-        help="Initial quantity",
-        prompt="Initial quantity"
-    ),
-    initial_price: float = typer.Option(
-        ..., "--initial-price", "-ip",
-        help="Initial price per unit",
-        prompt="Initial price"
-    ),
-    new_qty: float = typer.Option(
-        ..., "--new-qty", "-nq",
-        help="New quantity to purchase",
-        prompt="New quantity"
-    ),
-    new_price: float = typer.Option(
-        ..., "--new-price", "-np",
-        help="New price per unit",
-        prompt="New price"
-    ),
-    precision: int = typer.Option(
-        6, "--precision", "-p",
-        help="Decimal precision for results",
-        min=0,
-        max=10
-    ),
-):
+def calculate_average_price(
+    initial_quantity: float,
+    initial_price: float,
+    new_quantity: float,
+    new_price: float,
+    precision: int = 6,
+) -> tuple[float, float, float]:
     """
-    Calculate weighted average price after additional purchase.
-    
-    Example:
-        avg-price-calc calculate --initial-qty 100 --initial-price 10.5 --new-qty 50 --new-price 12.0
+    Calculate the weighted average price after additional purchase.
+
+    Parameters
+    ----------
+    initial_quantity : float
+        Initial quantity
+    initial_price : float
+        Initial average price
+    new_quantity : float
+        Newly purchased quantity
+    new_price : float
+        New purchase price
+    precision : int
+        Decimal precision for rounding
+
+    Returns
+    -------
+    tuple
+        (new average price, total quantity, total investment)
+
+    Raises
+    ------
+    ValueError
+        If any input is invalid
+    ZeroDivisionError
+        If total quantity is zero
     """
-    try:
-        data = PriceData(
-            initial_quantity=initial_qty,
-            initial_price=initial_price,
-            new_quantity=new_qty,
-            new_price=new_price,
-        )
-        
-        result = calculate_average_price_safe(data, precision)
-        
-        # Display results in a table
-        table = Table(title="📊 Average Price Calculation Results", show_header=True)
-        table.add_column("Metric", style="cyan", width=20)
-        table.add_column("Value", style="green", justify="right")
-        table.add_column("Description", style="white")
-        
-        table.add_row(
-            "Average Price",
-            f"{result.average_price:.{precision}f}",
-            "Weighted average price per unit"
-        )
-        table.add_row(
-            "Total Quantity",
-            f"{result.total_quantity:.{precision}f}",
-            "Total units after purchase"
-        )
-        table.add_row(
-            "Total Investment",
-            f"{result.total_investment:.{precision}f}",
-            "Total money invested"
-        )
-        
-        console.print(table)
-        
-        # Show formula
-        console.print("\n[bold]Formula:[/bold]")
-        console.print(f"  ({initial_qty} × {initial_price}) + ({new_qty} × {new_price})")
-        console.print(f"  ------------------------------------")
-        console.print(f"          {initial_qty} + {new_qty}")
-        
-    except Exception as e:
-        console.print(f"[red]Error: {e}[/red]")
-        raise typer.Exit(1)
+    # Validate inputs
+    if any(x <= 0 for x in [initial_quantity, initial_price, new_quantity, new_price]):
+        raise ValueError("All values must be positive")
 
+    # Calculate using Decimal for better precision
+    total_investment = Decimal(str(initial_quantity)) * Decimal(str(initial_price)) + Decimal(
+        str(new_quantity)
+    ) * Decimal(str(new_price))
 
-@app.command()
-def version():
-    """Show version information."""
-    from . import __version__
-    rprint(f"[bold green]Average Price Calculator[/bold green] v{__version__}")
+    total_quantity = Decimal(str(initial_quantity)) + Decimal(str(new_quantity))
 
+    if total_quantity == 0:
+        raise ZeroDivisionError("Total quantity cannot be zero")
 
-@app.command()
-def example():
-    """Run an example calculation."""
-    rprint("[yellow]Running example calculation...[/yellow]")
-    
-    data = PriceData(
-        initial_quantity=4.37562,
-        initial_price=3.602,
-        new_quantity=2.93867,
-        new_price=2.11,
+    average_price = total_investment / total_quantity
+
+    # Round with specified precision
+    rounding_format = f"0.{'0' * precision}"
+
+    avg_price_rounded = float(
+        average_price.quantize(Decimal(rounding_format), rounding=ROUND_HALF_UP)
     )
-    
-    result = calculate_average_price_safe(data)
-    
-    rprint(f"[cyan]Input:[/cyan]")
-    rprint(f"  Initial: {data.initial_quantity} units at ${data.initial_price}")
-    rprint(f"  New: {data.new_quantity} units at ${data.new_price}")
-    
-    rprint(f"[cyan]Results:[/cyan]")
-    rprint(f"  Average Price: ${result.average_price:.6f}")
-    rprint(f"  Total Quantity: {result.total_quantity:.6f}")
-    rprint(f"  Total Investment: ${result.total_investment:.6f}")
+    total_qty_rounded = float(
+        total_quantity.quantize(Decimal(rounding_format), rounding=ROUND_HALF_UP)
+    )
+    total_inv_rounded = float(
+        total_investment.quantize(Decimal(rounding_format), rounding=ROUND_HALF_UP)
+    )
+
+    return avg_price_rounded, total_qty_rounded, total_inv_rounded
 
 
-if __name__ == "__main__":
-    app()
+def calculate_average_price_safe(data: PriceData, precision: int = 6) -> CalculationResult:
+    """
+    Type-safe version of average price calculation.
+
+    Parameters
+    ----------
+    data : PriceData
+        Input data for calculation
+    precision : int
+        Decimal precision for rounding
+
+    Returns
+    -------
+    CalculationResult
+        Calculation results
+
+    Raises
+    ------
+    ValueError
+        If input data is invalid
+    """
+    avg_price, total_qty, total_inv = calculate_average_price(
+        data.initial_quantity,
+        data.initial_price,
+        data.new_quantity,
+        data.new_price,
+        precision,
+    )
+
+    return CalculationResult(
+        average_price=avg_price,
+        total_quantity=total_qty,
+        total_investment=total_inv,
+    )

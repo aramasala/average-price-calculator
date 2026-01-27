@@ -1,4 +1,4 @@
-.PHONY: help install init test lint format type-check clean
+.PHONY: help install init test lint format type-check clean lock
 
 # Default target
 .DEFAULT_GOAL := help
@@ -11,10 +11,13 @@ help: ## Show this help message
 	@echo "Targets:"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-install: ## Install all dependencies with poetry
-	poetry install --no-root
+lock: ## Update poetry.lock file
+	poetry lock
 
-project-init: install pre-commit ## Initialize project (install dependencies and pre-commit)
+install: ## Install all dependencies with poetry
+	poetry install
+
+project-init: lock install pre-commit ## Initialize project (install dependencies and pre-commit)
 	@echo "Project initialized successfully!"
 
 pre-commit: ## Install pre-commit hooks

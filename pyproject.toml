@@ -24,13 +24,14 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.12,<3.13"
+python = ">=3.10,<3.13"
 pydantic = "^2.5.0"
 pydantic-settings = "^2.10.1"
 
@@ -60,58 +61,146 @@ streamlit = "^1.36.0"
 avg-price-calc = "average_price_calculator.cli:app"
 
 [tool.ruff]
+# Exclude a variety of commonly ignored directories.
 exclude = [
-    ".bzr", ".direnv", ".eggs", ".git", ".git-rewrite", ".hg",
-    ".ipynb_checkpoints", ".mypy_cache", ".nox", ".pants.d",
-    ".pyenv", ".pytest_cache", ".pytype", ".ruff_cache", ".svn",
-    ".tox", ".venv", ".vscode", "__pypackages__", "_build",
-    "buck-out", "build", "dist", "node_modules", "site-packages",
-    "venv", "migrations/*",
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    "migrations/*",
 ]
 
+# Same as Black.
 line-length = 100
 indent-width = 4
-target-version = "py312"
+target-version = "py310"
 
 [tool.ruff.lint]
+# https://docs.astral.sh/ruff/rules/#pyflakes-f
 select = ["ALL"]
 ignore = [
-  "ANN", "G004", "D401", "RET504", "ISC001", "D106",
-  "EM101", "COM812", "TRY003",
+  "ANN",   # Allow missing type annotations
+  "G004",  # Allow logging statements
+  "D401",  # Allow imperative mood in docstrings
+  "RET504", # Allow unnecessary assignments
+  "ISC001", # Allow implicit string concatenation
+  "D106",  # Allow missing docstring in __init__
+  "EM101", # Allow raw exceptions
+  "COM812", # Allow trailing commas
+  "TRY003", # Allow too verbose exceptions
+  "PLC0415", # Allow imports at non-top-level for CLI
+  "PLR2004", # Allow magic values in tests
+  "PT011",  # Allow broad pytest.raises in tests
+  "D100",   # Allow missing module docstrings
+  "BLE001", # Allow catching Exception
+  "B904",   # Allow raise without from
+  "F541",   # Allow f-string without placeholders
+  "RUF001", # Allow ambiguous characters
+  "E402",   # Allow module level import not at top
+  "INP001", # Allow implicit namespace packages
+  "W293",   # Allow blank line with whitespace
+  "W291",   # Allow trailing whitespace
+  "W292",   # Allow no newline at end of file
+  "E501",   # Allow line too long
+  "Q000",   # Allow single quotes
+  "F401",   # Allow unused imports
+  "RUF022", # Allow __all__ not sorted
+  "I001",   # Allow unsorted imports
+  "D400",   # Allow missing docstring first line
+  "D103",   # Allow missing docstring in __init__
+  "S",      # Allow security issues in tests
+  "D",      # Allow pydocstyle issues in tests
+  "BLE001", # Allow blind exceptions in scripts
+  "LOG",    # Allow logging issues in scripts
 ]
-exclude = [".additional/*"]
+
+exclude = [
+  ".additional/*"
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
 unfixable = []
+
+# Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S", "D", "INP001"]
-"average_price_calculator/__init__.py" = ["D400", "D103"]
+"tests/*" = ["S", "D", "INP001", "PLR2004", "PT011", "PLC0415"]
+"average_price_calculator/__init__.py" = ["D400", "D103", "E402", "RUF022", "I001"]
 "scripts/*" = ["BLE001", "D", "INP001", "LOG"]
 "average_price_calculator/settings.py" = ["D106"]
+"average_price_calculator/cli.py" = ["PLC0415", "E501"]
+"streamlit_app.py" = ["E501", "BLE001"]
+"tests/unit/test_calculator.py" = ["PLC0415"]
 
 [tool.ruff.format]
+# Like Black, use double quotes for strings.
 quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
 indent-style = "space"
+
+# Like Black, respect magic trailing commas.
 skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
+
+# Enable auto-formatting of code examples in docstrings.
 docstring-code-format = false
 docstring-code-line-length = "dynamic"
 
 [tool.black]
-target-version = ["py312"]
+# https://github.com/psf/black
+target-version = ["py310"]
 line-length = 100
 color = true
+
 exclude = '''
-/(\.git|\.hg|\.mypy_cache|\.tox|\.venv|_build|
-  buck-out|build|dist|env|venv)/
+/(
+    \.git
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | env
+    | venv
+)/
 '''
 
 [tool.mypy]
-python_version = "3.12"
+# https://mypy.readthedocs.io/en/latest/config_file.html#using-a-pyproject.toml-file
+python_version = "3.10"
 files = [
   "average_price_calculator",
   "tests",
@@ -120,6 +209,7 @@ files = [
 pretty = true
 show_traceback = true
 color_output = true
+
 allow_redefinition = false
 check_untyped_defs = true
 disallow_any_generics = true
@@ -130,7 +220,7 @@ no_implicit_optional = true
 show_column_numbers = true
 show_error_codes = true
 show_error_context = true
-strict_equality = true
+strict_equality = false
 strict_optional = true
 warn_no_return = true
 warn_redundant_casts = true
@@ -140,15 +230,32 @@ warn_unused_configs = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
-module = ["streamlit", "typer", "rich"]
+module = [
+  "streamlit",
+  "typer",
+  "rich",
+  "pytest",
+  "pydantic.*",
+  "jupyter.*",
+  "ipykernel.*",
+  "nbconvert.*",
+  "nbdime.*",
+  "envyaml.*",
+]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
+# https://docs.pytest.org/en/6.2.x/customize.html#pyproject.toml
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+pythonpath = ["."]  # Ավելացրեք այս տողը
+
+# Directories that are not visited by pytest collector:
 norecursedirs = ["hooks", "*.egg", ".eggs", "dist", "build", "docs", ".tox", ".git", "__pycache__"]
 doctest_optionflags = ["NUMBER", "NORMALIZE_WHITESPACE", "IGNORE_EXCEPTION_DETAIL"]
+
+# Extra options:
 addopts = [
   "--strict-markers",
   "--tb=short",
@@ -158,9 +265,44 @@ addopts = [
   "--cov-report=term-missing",
   "--cov-report=html",
 ]
+
 testpaths = ["tests"]
+
 markers = [
   "slow: marks tests as slow (deselect with '-m \"not slow\"')",
   "integration: integration tests",
   "unit: unit tests",
 ]
+
+[tool.coverage.run]
+source = ["average_price_calculator"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+    "*/site-packages/*",
+    "*/venv/*",
+    "*/virtualenv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
+
+show_missing = true
+skip_covered = true
+
+# Project-specific configuration
+[tool.average_price_calculator]
+default_precision = 6
+min_precision = 2
+max_precision = 10

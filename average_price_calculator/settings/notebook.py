@@ -1,16 +1,14 @@
+"""Notebook settings configuration."""
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# https://docs.pydantic.dev/latest/concepts/pydantic_settings/
+
 class NotebookSettings(BaseSettings):
-    """Application settings."""
+    """Notebook specific settings."""
+
+    name: str = "average_price_calculator"
 
     model_config = SettingsConfigDict(
-        env_prefix = "APP_NB_",
-        case_sensitive = False,
-        # https://docs.pydantic.dev/latest/concepts/pydantic_settings/#dotenv-env-support
-        env_file=".env",
-        env_file_encoding="utf-8"
+        env_prefix="APP_NB_",
+        case_sensitive=False,
     )
-
-    # Loads APP_NAME env
-    name: str

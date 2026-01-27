@@ -3,6 +3,9 @@
 
 from importlib import metadata as importlib_metadata
 
+from .calculator import calculate_average_price, calculate_average_price_safe
+from .models import CalculationResult, PriceData
+
 
 def get_version() -> str:
     try:
@@ -13,15 +16,10 @@ def get_version() -> str:
 
 __version__: str = get_version()
 
-# Export main functions and classes
-from .calculator import calculate_average_price, calculate_average_price_safe
-from .models import PriceData, CalculationResult
-
 __all__ = [
+    "CalculationResult",
+    "PriceData",
     "__version__",
     "calculate_average_price",
     "calculate_average_price_safe",
-    "PriceData",
-    "CalculationResult",
 ]
-
