@@ -34,8 +34,8 @@ A professional tool for calculating weighted average prices after additional pur
 git clone https://github.com/aramasala/average-price-calculator.git
 cd average-price-calculator
 
-# Install dependencies
-poetry install
+# Install 
+make setup
 
-# Activate virtual environment
-poetry shell
+# run 
+make run 
