@@ -249,7 +249,7 @@ ignore_missing_imports = true
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-pythonpath = ["."]  # Ավելացրեք այս տողը
+pythonpath = ["."]
 
 # Directories that are not visited by pytest collector:
 norecursedirs = ["hooks", "*.egg", ".eggs", "dist", "build", "docs", ".tox", ".git", "__pycache__"]

@@ -1,3 +1,4 @@
+"""Sample script: load config and run example. Use only trusted config file paths."""
 import argparse
 import logging.config
 import os
@@ -8,13 +9,12 @@ from envyaml import EnvYAML
 
 from average_price_calculator.example import hello, show_message
 
-# Load root .env file
 load_dotenv()
 
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--config", help="path to configuration file", type=str)
+    parser.add_argument("-c", "--config", help="path to configuration file (trusted source only)", type=str)
     args = parser.parse_args()
 
     return args

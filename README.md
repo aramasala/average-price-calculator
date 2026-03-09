@@ -15,7 +15,7 @@ A professional tool for calculating weighted average prices after additional pur
 
 </div>
 
-## 🚀 Features
+## Features
 
 - **Accurate Calculations**: Calculate weighted average prices with high precision
 - **Multiple Interfaces**: 
@@ -25,7 +25,7 @@ A professional tool for calculating weighted average prices after additional pur
 - **Type Safety**: Full type hints with Pydantic validation
 - **Professional Tooling**: Pre-commit hooks, linting, formatting, and testing
 
-## 📦 Installation
+## Installation
 
 ### Using Poetry (Recommended)
 

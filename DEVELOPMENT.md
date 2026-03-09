@@ -93,7 +93,7 @@ make type-check
     - To export notebook with ToC use next command:
 
       ```bash
-      poetry run jupyter nbconvert --template toc2 --to html_toc --output-dir ./exports <путь до файла>
+      poetry run jupyter nbconvert --template toc2 --to html_toc --output-dir ./exports <path-to-file>
       ```
 
       > For example, `poetry run jupyter nbconvert --template toc2 --to html_toc --output-dir ./exports notebooks/example.ipynb`
@@ -101,7 +101,7 @@ make type-check
       To use embedded images into HTML use option `html_embed`:
 
       ```bash
-      poetry run jupyter nbconvert --template toc2 --to html_embed --output-dir ./exports <путь до файла>
+      poetry run jupyter nbconvert --template toc2 --to html_embed --output-dir ./exports <path-to-file>
       ```
 
 [Table of contents](#table-of-contents)

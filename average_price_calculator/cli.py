@@ -70,7 +70,7 @@ def calculate(
         result = calculate_average_price_safe(data, precision)
 
         # Display results in a table
-        table = Table(title="📊 Average Price Calculation Results", show_header=True)
+        table = Table(title="Average price calculation results", show_header=True)
         table.add_column("Metric", style="cyan", width=20)
         table.add_column("Value", style="green", justify="right")
         table.add_column("Description", style="white")

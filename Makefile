@@ -27,7 +27,7 @@ help: ## Show this help message
 
 # Main setup and run targets
 setup: check-python venv deps ## First-time setup: Create venv and install dependencies
-	@echo "$(GREEN)✅ Setup complete!$(NC)"
+	@echo "$(GREEN)Setup complete.$(NC)"
 	@echo ""
 	@echo "$(YELLOW)Next steps:$(NC)"
 	@echo "  make run        # Run the Streamlit app"
@@ -44,14 +44,14 @@ venv: ##  Create virtual environment
 	@if [ ! -d "$(VENV_DIR)" ]; then \
 		echo "$(BLUE)Creating virtual environment...$(NC)"; \
 		python3 -m venv $(VENV_DIR); \
-		echo "$(GREEN)✅ Virtual environment created at $(VENV_DIR)$(NC)"; \
+		echo "$(GREEN)Virtual environment created at $(VENV_DIR)$(NC)"; \
 	else \
 		echo "$(YELLOW)Virtual environment already exists at $(VENV_DIR)$(NC)"; \
 	fi
 
 check-venv: ## Check if virtual environment exists
 	@if [ ! -d "$(VENV_DIR)" ]; then \
-		echo "$(RED)❌ Virtual environment not found!$(NC)"; \
+		echo "$(RED)Virtual environment not found.$(NC)"; \
 		echo "Run 'make setup' first"; \
 		exit 1; \
 	fi
@@ -73,10 +73,10 @@ deps: check-venv ## Install dependencies
 	$(VENV_ACTIVATE) && pip install --upgrade pip
 	$(VENV_ACTIVATE) && pip install poetry
 	$(VENV_ACTIVATE) && poetry install
-	@echo "$(GREEN)✅ Dependencies installed$(NC)"
+	@echo "$(GREEN)Dependencies installed.$(NC)"
 
 install: deps ## Alias for deps
-	@echo "$(GREEN)✅ Installation complete$(NC)"
+	@echo "$(GREEN)Installation complete.$(NC)"
 
 # Development commands
 test: check-venv ## Run tests
@@ -113,10 +113,10 @@ clean: ## Clean project files
 	find . -type d -name ".pytest_cache" -exec rm -rf {} + 2>/dev/null || true
 	find . -type d -name ".ruff_cache" -exec rm -rf {} + 2>/dev/null || true
 	rm -rf .coverage htmlcov *.egg-info dist build
-	@echo "$(GREEN)✅ Project cleaned$(NC)"
+	@echo "$(GREEN)Project cleaned.$(NC)"
 
 reset: clean setup ## Clean and re-setup project
-	@echo "$(GREEN)✅ Project reset complete$(NC)"
+	@echo "$(GREEN)Project reset complete.$(NC)"
 
 info: ## Show project information
 	@echo "$(BLUE)Project Information:$(NC)"
@@ -138,9 +138,9 @@ info: ## Show project information
 check-python: ##  Check Python installation
 	@echo "$(BLUE)Checking Python...$(NC)"
 	@if command -v python3 >/dev/null 2>&1; then \
-		echo "$(GREEN)✅ Python3 found: $$(python3 --version)$(NC)"; \
+		echo "$(GREEN)Python3 found: $$(python3 --version)$(NC)"; \
 	else \
-		echo "$(RED)❌ Python3 not found!$(NC)"; \
+		echo "$(RED)Python3 not found.$(NC)"; \
 		echo "Please install Python 3.8 or higher"; \
 		exit 1; \
 	fi
@@ -173,7 +173,7 @@ streamlit_app.py:
 		echo 'st.title("Average Price Calculator")' >> streamlit_app.py; \
 		echo 'st.write("Welcome to the Average Price Calculator!")' >> streamlit_app.py; \
 		echo 'st.write("Run \`make setup\` first to install dependencies.")' >> streamlit_app.py; \
-		echo "$(GREEN)✅ Created streamlit_app.py$(NC)"; \
+		echo "$(GREEN)Created streamlit_app.py$(NC)"; \
 	fi
 
 # Default streamlit file creation before run

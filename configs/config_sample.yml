@@ -29,4 +29,4 @@ logger:
     average_price_calculator.example:
       level: INFO
       handlers: [console]
-      propogate: false
+      propagate: false

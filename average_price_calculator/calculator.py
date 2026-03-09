@@ -12,34 +12,7 @@ def calculate_average_price(
     new_price: float,
     precision: int = 6,
 ) -> tuple[float, float, float]:
-    """
-    Calculate the weighted average price after additional purchase.
-
-    Parameters
-    ----------
-    initial_quantity : float
-        Initial quantity
-    initial_price : float
-        Initial average price
-    new_quantity : float
-        Newly purchased quantity
-    new_price : float
-        New purchase price
-    precision : int
-        Decimal precision for rounding
-
-    Returns
-    -------
-    tuple
-        (new average price, total quantity, total investment)
-
-    Raises
-    ------
-    ValueError
-        If any input is invalid
-    ZeroDivisionError
-        If total quantity is zero
-    """
+    """Weighted average price after an additional purchase. Returns (avg, total_qty, total_inv)."""
     # Validate inputs
     if any(x <= 0 for x in [initial_quantity, initial_price, new_quantity, new_price]):
         raise ValueError("All values must be positive")
@@ -73,26 +46,7 @@ def calculate_average_price(
 
 
 def calculate_average_price_safe(data: PriceData, precision: int = 6) -> CalculationResult:
-    """
-    Type-safe version of average price calculation.
-
-    Parameters
-    ----------
-    data : PriceData
-        Input data for calculation
-    precision : int
-        Decimal precision for rounding
-
-    Returns
-    -------
-    CalculationResult
-        Calculation results
-
-    Raises
-    ------
-    ValueError
-        If input data is invalid
-    """
+    """Average price from validated PriceData; returns CalculationResult."""
     avg_price, total_qty, total_inv = calculate_average_price(
         data.initial_quantity,
         data.initial_price,

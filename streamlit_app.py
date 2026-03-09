@@ -6,12 +6,11 @@ from average_price_calculator import PriceData, calculate_average_price_safe
 # Page configuration
 st.set_page_config(
     page_title="Average Price Calculator",
-    page_icon="💰",
     layout="wide",
 )
 
 # Title
-st.title("💰 Average Price Calculator")
+st.title("Average Price Calculator")
 st.markdown(
     """
 Calculate the weighted average price after additional purchases.
@@ -21,7 +20,7 @@ Useful for investment portfolio calculations.
 
 # Sidebar
 with st.sidebar:
-    st.header("⚙️ Settings")
+    st.header("Settings")
     precision = st.slider("Decimal Precision", 2, 10, 6)
     st.markdown("---")
     st.markdown("### Example Values")
@@ -71,7 +70,7 @@ with st.form("calculator_form"):
             key="new_price_input",
         )
 
-    calculate = st.form_submit_button("🚀 Calculate", type="primary")
+    calculate = st.form_submit_button("Calculate", type="primary")
 
 # Calculation and results
 if calculate:
@@ -94,25 +93,25 @@ if calculate:
 
         with col1:
             st.metric(
-                "📈 Average Price",
+                "Average Price",
                 f"${result.average_price:.{precision}f}",
                 delta=None,
             )
 
         with col2:
             st.metric(
-                "📦 Total Quantity",
+                "Total Quantity",
                 f"{result.total_quantity:.{precision}f}",
             )
 
         with col3:
             st.metric(
-                "💰 Total Investment",
+                "Total Investment",
                 f"${result.total_investment:.{precision}f}",
             )
 
         # Detailed calculation
-        with st.expander("📝 Show Detailed Calculation"):
+        with st.expander("Show detailed calculation"):
             formula = (
                 rf"\text{{Average Price}} = "
                 rf"\frac{{({initial_qty} \times {initial_price}) "
@@ -131,12 +130,12 @@ if calculate:
             st.code(calculation_text)
 
         # JSON output
-        with st.expander("📄 Show JSON Output"):
+        with st.expander("Show JSON output"):
             st.json(data.model_dump())
             st.json(result.model_dump())
 
     except (ValueError, ZeroDivisionError) as e:
-        st.error(f"❌ Error: {e}")
+        st.error(f"Error: {e}")
 
 # Footer
 st.markdown("---")

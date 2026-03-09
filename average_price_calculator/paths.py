@@ -1,7 +1,4 @@
-"""Module for project paths.
-
-Don`t use it if you build package and use it externally!
-"""
+"""Project paths. For in-repo use only."""
 
 from pathlib import Path
 
